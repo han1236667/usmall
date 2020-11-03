@@ -34,7 +34,7 @@
             </el-submenu>
             
             <!-- 没有目录 -->
-            <el-menu-item :index="item.url" v-else>
+            <el-menu-item :index="'/index'+item.url" v-else>
               <span slot="title">{{item.title}}</span>
             </el-menu-item>
           </div>

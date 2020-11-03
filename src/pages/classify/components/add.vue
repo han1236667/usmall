@@ -7,7 +7,7 @@
     <el-form-item label="上级分类" label-width="100px">
    
       <el-select v-model="form.pid" placeholder="请选择">
-
+  <el-option label="--请选择--" value disabled></el-option>
      <el-option
       label="顶级分类"
       :value="0">
@@ -17,7 +17,7 @@
       v-for="item in list"
       :key="item.id"
       :label="item.catename"
-      :value="item.catename">
+      :value="item.id">
     </el-option>
 
   </el-select>
@@ -128,7 +128,9 @@ methods:{
   },
 
   add(){
-     let data= new FormData();
+    
+    this.checked().then(()=>{
+         let data= new FormData();
      for(let i in this.form){
           data.append(i,this.form[i])
      }  
@@ -149,6 +151,9 @@ methods:{
      }
     // console.log(res)
    })
+    })
+    
+   
 },
 look(id){
   reqClassifyListOne(id).then(res=>{
@@ -166,6 +171,8 @@ look(id){
   },
   // 点击修改
   edit(){
+  
+   this.checked().then(()=>{
     let list = new FormData();
     for(let i in this.form){
        list.append(i,this.form[i])
@@ -180,7 +187,28 @@ look(id){
         alertWarning(res.data.msg)
       }
     })
-  }
+   })
+
+   
+  },
+  checked(){
+     return new Promise((resolve,reject)=>{
+         if(this.form.pid===""){
+          alertWarning("上级分类不能为空")
+          return;
+        }
+        if(this.form.catename==""){
+          alertWarning("分类名称不能为空")
+          return;
+        }
+           if(this.form.pid!=="0"||this.form.img==null){
+          alertWarning("图片不能为空")
+          return;
+        }
+        
+        resolve()
+     })
+   }
 
 },
 mounted(){

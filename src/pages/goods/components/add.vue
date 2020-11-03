@@ -9,8 +9,6 @@
    
       <el-select v-model="form.first_cateid" placeholder="请选择" @change="changeFirst">
 
-    
-
     <el-option
       v-for="item in classifyList"
       :key="item.id"
@@ -213,13 +211,13 @@ methods:{
       let file=e.target.files[0]
 
       if(file.size>2*1024*1024){
-        errorAlert("文件不能超过2M");
+        alertWarning("文件不能超过2M");
         return;
       }
 
       let arr=[".jpg",".png",".gif",".jpeg"];
       if(!arr.includes(file.name.slice(file.name.lastIndexOf(".")))){
-        errorAlert("请上传正确的图片")
+        alertWarning("请上传正确的图片")
         return
       }
 
@@ -270,8 +268,8 @@ methods:{
   },
 
   add(){
-    
-      this.form.description=this.editor.txt.html()
+    this.checked().then(()=>{
+    this.form.description=this.editor.txt.html()
      
         let obj={
         ...this.form
@@ -292,8 +290,12 @@ methods:{
             this.reqGoodsList()
             //请总数
             // this.reqTotalAction()
+          }else{
+            alertWarning(res.data.msg)
           }
       })
+    })
+    
        
 },
 look(id){
@@ -323,14 +325,57 @@ look(id){
     }
 })
 },
+  //验证
+    checked(){
+      return new Promise((resolve,reject)=>{
+        //验证数据是否均不为空
+        if(this.form.first_cateid===""){
+          alertWarning("一级分类不能为空")
+          return;
+        }
+        if(this.form.second_cateid===""){
+          alertWarning("二级分类不能为空")
+          return;
+        }
+        if(this.form.goodsname===""){
+          alertWarning("商品名称不能为空")
+          return;
+        }
+        if(this.form.price===""){
+          alertWarning("价格不能为空")
+          return;
+        }
+        if(this.form.market_price===""){
+          alertWarning("市场不能为空")
+          return;
+        }
+        if(!this.form.img){
+          alertWarning("请选择图片")
+          return;
+        }
+        if(this.form.specsid===""){
+          alertWarning("规格不能为空")
+          return;
+        }
+        if(this.form.specsattr.length===0){
+          alertWarning("请选择商品属性")
+          return;
+        }
+
+        if(this.form.description===""){
+          alertWarning("描述不能为空")
+          return;
+        }
+        resolve()
+      })},
 //  判断清空表中数据
   letEmpty(){
    this.empty();
   },
   // 点击修改
   edit(){
-    
-     //获取一下富文本编辑器的内容给form.description 
+    this.checked().then(()=>{
+       //获取一下富文本编辑器的内容给form.description 
       this.form.description=this.editor.txt.html()
 
      
@@ -351,6 +396,8 @@ look(id){
             this.reqGoodsList()
           }
         })
+    })
+    
       
     
   }

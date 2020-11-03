@@ -28,7 +28,7 @@
       sortable
       width="180">
        <template slot-scope="scope">
-        <img :src= "$imgPre + scope.row.img" alt="" >    
+        <img :src= "$imgPre + scope.row.img" alt="" v-if="scope.row.img!=='null'" >    
         
        </template>     
 
@@ -80,7 +80,7 @@ components:{
  },
 data () {
  return {
-    //  imgUrl:null,
+     imgUrl:null,
  }
 },
 methods:{

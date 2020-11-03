@@ -11,6 +11,7 @@ import role from "./modules/role"
 import classify from './modules/classify'
 import spces from './modules/spces'
 import goods from './modules/goods'
+import member from './modules/member'
 
 export default  new Vuex.Store({
     state,
@@ -22,6 +23,7 @@ export default  new Vuex.Store({
        role,
        classify,
        spces,
-       goods
+       goods,
+       member
     }
 })

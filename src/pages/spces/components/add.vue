@@ -97,7 +97,8 @@ methods:{
   },
 
   add(){
-    this.form.attrs=JSON.stringify(this.attrArr.map(item=>{
+   this.checked().then(()=>{
+        this.form.attrs=JSON.stringify(this.attrArr.map(item=>{
       return item.val
     })) 
 
@@ -118,6 +119,9 @@ methods:{
      }
     // console.log(res)
    })
+   })
+
+   
 },
 look(id){
   reqSpecListOne(id).then(res=>{
@@ -138,8 +142,8 @@ look(id){
   },
   // 点击修改
   edit(){
-    
-    this.form.attrs=JSON.stringify(this.attrArr.map(item=>{
+    this.checked().then(()=>{
+      this.form.attrs=JSON.stringify(this.attrArr.map(item=>{
       return item.val
     }))
    console.log(this.form)
@@ -152,7 +156,24 @@ look(id){
         alertWarning(res.data.msg)
       }
     })
-  }
+    })
+    
+  },
+    checked(){
+     return new Promise((resolve,reject)=>{
+         if(this.form.specsname===""){
+          alertWarning("商品规格不能为空")
+          return;
+        }
+        if((this.attrArr.filter(item=>{return item.val==""})).length>0 ){
+          alertWarning("规格属性不能为空")
+          return;
+        }
+         
+        
+        resolve()
+     })
+   }
 
 },
 mounted(){

@@ -93,8 +93,8 @@ methods:{
   },
 
   add(){
-   
-   reqUserAdd(this.form).then(res=>{
+   this.checked().then(()=>{
+         reqUserAdd(this.form).then(res=>{
      if(res.data.code===200){
           alertSuccess("添加成功");
           // 关闭弹窗
@@ -107,6 +107,8 @@ methods:{
        alertWarning(res.data.msg)
      }
    })
+   })
+  
 },
 look(uid){
   reqUserListOne(uid).then(res=>{
@@ -123,7 +125,8 @@ look(uid){
   },
   // 点击修改
   edit(){
-    reqUserEdit(this.form).then(res=>{
+    this.checked().then(()=>{
+        reqUserEdit(this.form).then(res=>{
       if(res.data.code==200){
         alertSuccess("修改成功");
       this.info.isShow=false;
@@ -132,7 +135,27 @@ look(uid){
         alertWarning(res.data.msg)
       }
     })
-  }
+    })
+   
+  },
+    checked(){
+     return new Promise((resolve,reject)=>{
+         if(this.form.roleid==""){
+          alertWarning("所属角色不能为空")
+          return;
+        }
+        if(this.form.username==""){
+          alertWarning("用户名不能为空")
+          return;
+        }
+           if(this.form.password==""){
+          alertWarning("密码不能为空")
+          return;
+        }
+        
+        resolve()
+     })
+   }
 
 },
 mounted(){

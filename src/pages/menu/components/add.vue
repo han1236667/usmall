@@ -121,6 +121,8 @@ changePid(){
      }
     },
     add(){
+      
+      this.checked().then(()=>{
         reqMenuAdd(this.form).then((res)=>{
          if(res.data.code==200){
              alertSuccess(res.data.msg)
@@ -132,6 +134,9 @@ changePid(){
              alertWarning(res.data.msg)
          }
         })
+      })
+     
+       
           
     },
     look(id){
@@ -144,7 +149,8 @@ changePid(){
 
      //  点击修改按钮
     updata(){
-       reqMenuEdit(this.form).then(res=>{
+      this.checked().then(()=>{
+      reqMenuEdit(this.form).then(res=>{
            if(res.data.code==200){
              alertSuccess(res.data.msg)
             this.requestMenuList();
@@ -155,7 +161,23 @@ changePid(){
              alertWarning(res.data.msg)
          }
        })
-    } 
+      })
+       
+    } ,
+    // 验证
+    checked(){
+      return new Promise((resolve,reject)=>{
+          if(this.form.title===""){
+            alertWarning('标题不能为空')
+                return;
+            }
+            if(this.form.icon===""&&this.form.url===""){
+            alertWarning('图标或地址不能为空')
+                return;
+            }
+            resolve()
+      })
+    }
 },
 mounted(){
      

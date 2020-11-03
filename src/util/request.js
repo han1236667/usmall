@@ -1,14 +1,29 @@
 import axios from "axios"
 import qs from "qs"
 import Vue from "vue"
+import store from '../store/index'
 // 响应拦截
 axios.interceptors.response.use((res)=>{
     console.log('=========拦截开始======')
     console.log("请求地址是"+res.config.url)
     console.log(res)
+         //判断是否登录过期  msg="登录已过期或访问权限受限"
+    if(res.data.msg==="登录已过期或访问权限受限"){
+        router.push('/login')
+        //用户信息置空
+        store.dispatch("changeUserInfoAction",{})
+    }
     return res
 })
 
+// 请求拦截
+axios.interceptors.request.use(req=>{
+    // 如果去的请求地址不是登录，就配置请求头
+    if(req.url!==baseUrl+"/api/userlogin"){
+        req.headers.authorization=store.state.userInfo.token;
+    }
+    return req;
+})
 
 const baseUrl = '/api'
 Vue.prototype.$imgPre="http://localhost:3000"
@@ -319,4 +334,116 @@ export const reqLogin=(form)=>{
     })
 }
 
+//==================================== 会员管理==================
+export const reqMemberAdd=(form)=>{
+    return axios({
+        url:baseUrl+"/api/memberadd",
+        method:"post",
+        data:qs.string(form)
+    })
+}
+// 会员列表
+export const reqMemberList=()=>{
+    return axios({
+        url:baseUrl+"/api/memberlist",
+        method:"get",
+    })
+}
+// 会员获取一条
+export const reqMemberListOne=(uid)=>{
+    return axios({
+        url:baseUrl+"/api/memberinfo",
+        method:"get",
+        params:uid
+       
+    })
+}
+// 会员修改
+export const reqMemberEdit=(form)=>{
+    return axios({
+        url:baseUrl+"/api/memberedit",
+        method:"post",
+        data:form
+    })
+}
+// =======================轮播图管理====================
+export const reqBannerAdd=(form)=>{
+    return axios({
+        url:baseUrl+"/api/banneradd",
+        method:"post",
+        data:form 
+    })
+}
 
+export const reqBannerList=()=>{
+    return axios({
+     url:baseUrl+"/api/bannerlist",
+     method:"get"
+    })
+}
+
+export const  reqBannerListOne=(id)=>{
+    return axios({
+        url:baseUrl+ "/api/bannerinfo",
+        method:"get",
+        params:{id:id}
+    })
+}
+
+export const reqBannerEdit=(form)=>{
+      return axios({
+          url:baseUrl+"/api/banneredit",
+          method:"post",
+          data:form
+      })
+}
+
+export const reqBannerDel=(id)=>{
+    return axios({
+        url:baseUrl+"/api/bannerdelete",
+        method:"post",
+        data:qs.stringify({id:id})
+    })
+}
+// =-===================秒杀活动
+export const reqSeckillAdd=(form)=>{
+    return axios({
+        url:baseUrl+"/api/seckadd",
+        method:"post",
+        data:qs.stringify(form) 
+    })
+}
+
+
+export const reqSeckillList=()=>{
+    return axios({
+     url:baseUrl+"/api/secklist",
+     method:"get"
+    })
+}
+
+
+export const  reqSeckillListOne=(id)=>{
+    return axios({
+        url:baseUrl+ "/api/seckinfo",
+        method:"get",
+        params:{id:id}
+    })
+}
+
+export const reqSeckillEdit=(form)=>{
+    return axios({
+        url:baseUrl+"/api/seckedit",
+        method:"post",
+        data:qs.stringify(form)
+    })
+}
+
+
+export const reqSeckillDel=(id)=>{
+    return axios({
+        url:baseUrl+"/api/seckdelete",
+        method:"post",
+        data:qs.stringify({id:id})
+    })
+}

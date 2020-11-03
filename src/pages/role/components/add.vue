@@ -102,7 +102,8 @@ methods:{
       
    },
     add(){
-       this.form.menus=JSON.stringify(this.$refs.tree.getCheckedKeys());
+      this.checked().then(()=>{
+         this.form.menus=JSON.stringify(this.$refs.tree.getCheckedKeys());
         reqRoleAdd(this.form).then(res=>{
                if(res.data.code==200){
                alertSuccess(res.data.msg)
@@ -114,6 +115,8 @@ methods:{
 
                }
         })
+      })
+      
    },
 //    查看一条数据
    look(id){
@@ -125,8 +128,8 @@ methods:{
    },
 //  点击修改按钮
    edit(){
-       
-        this.form.menus=JSON.stringify(this.$refs.tree.getCheckedKeys());
+      this.checked().then(()=>{
+             this.form.menus=JSON.stringify(this.$refs.tree.getCheckedKeys());
       reqRoleEdit(this.form).then(res=>{
         if(res.data.code==200){
           alertSuccess(res.data.msg);
@@ -139,6 +142,21 @@ methods:{
 
         }
       })
+      })
+   
+   },
+   checked(){
+     return Promise((resolve,reject)=>{
+        if(this.form.rolename==""){
+          alertWarning("菜单名不能为空")
+          return;
+        }
+           if(this.form.icon==""&&this.form.url==""){
+          alertWarning("菜单图标或菜单地址不能为空")
+          return;
+        }
+        resolve()
+     })
    }
 },
 mounted(){
